@@ -25,7 +25,7 @@ void simple_delay(uint32_t us)
 	int i;
 	/* simple delay loop */
 	while (us--) {
-		i=1500;
+		i=1000;
 		while (i--) {
 		asm volatile ("nop");
 		}
@@ -63,12 +63,12 @@ int main(void)
 		GPIO_SetBits(LEDPORT, LEDPIN);
 		GPIO_ResetBits(LEDPORT, LEDPIN2);
 		/* delay */
-		simple_delay(3500);
+		simple_delay(500);
 		/* clear led */
 		GPIO_ResetBits(LEDPORT, LEDPIN);
 		GPIO_SetBits(LEDPORT, LEDPIN2);
 		/* delay */
-		simple_delay(200);
+		simple_delay(500);
 	}
 
 	/* never reached */
