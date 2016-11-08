@@ -6,9 +6,9 @@ clear all, clc, format compact
 % Test for qpsk.m
 
 % Define predetermined bits, do 3 testcases
-b1 = [0 0 0 0 1 1 1 1];
-b2 = [1 0 1 0 1 0 1 0];
-b3 = [1 0 0 1 0 0 1 1];
+b1 = [-1 -1 -1 -1 1 1 1 1];
+b2 = [1 -1 1 -1 1 -1 1 -1];
+b3 = [1 -1 -1 1 -1 -1 1 1];
 
 
 
