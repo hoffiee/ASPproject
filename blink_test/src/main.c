@@ -63,12 +63,12 @@ int main(void)
 		GPIO_SetBits(LEDPORT, LEDPIN);
 		GPIO_ResetBits(LEDPORT, LEDPIN2);
 		/* delay */
-		simple_delay(2000);
+		simple_delay(3500);
 		/* clear led */
 		GPIO_ResetBits(LEDPORT, LEDPIN);
 		GPIO_SetBits(LEDPORT, LEDPIN2);
 		/* delay */
-		simple_delay(2000);
+		simple_delay(200);
 	}
 
 	/* never reached */
