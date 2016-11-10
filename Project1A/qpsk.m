@@ -13,8 +13,19 @@ function s = qpsk(b, fcn_type)
 			s(n) = (1/sqrt(2))*(b(2*n-1) + i*b(2*n));
 		end
 	
+
+
 	else if nargin == 2 && fcn_type == -1
-		% This is what we do if it is the inverse
+		
+		[h H] = channel(1);
+		H_conj = conj(H);
+
+
+		for k = 1:length(b)
+			s(2*k-1) = sign(real(H_conj(k)*b(k)));
+			s(2*k) = sign(imag(H_conj(k)*b(k)));
+		end
+
 	end
 
 end
