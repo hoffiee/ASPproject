@@ -13,7 +13,7 @@ b3 = [1 -1 -1 1 -1 -1 1 1];
 
 
 
-s1 = qpsk(b1)
-s2 = qpsk(b2)
-s3 = qpsk(b3)
+s1 = qpsk(b1,1)
+s2 = qpsk(b2,1)
+s3 = qpsk(b3,1)
 
