@@ -19,8 +19,8 @@ function s = qpsk(b, N, H, fcn_type)
 
 		
 		for k = 1:length(b)
-			s(2*k-1) = sign(real(H_conj(k)*b(k)));
-			s(2*k) = sign(imag(H_conj(k)*b(k)));
+			s(2*k-1) = sign(real(b(k)));
+			s(2*k) = sign(imag(b(k)));
 		end
 
 	end

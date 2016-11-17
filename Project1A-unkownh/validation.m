@@ -16,13 +16,6 @@ function val = validation(b,b_hat,N,N_cp)
 		disp('length mismatch')	
 	end
 
-
-	
-
-	
-
 	% Channel utilization
 	disp(['Utilizing ', num2str((N/(N_cp+N))*100),'% of the channel'])
-
-
 end
