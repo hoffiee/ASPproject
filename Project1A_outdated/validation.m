@@ -13,7 +13,7 @@ function val = validation(b,b_hat)
 				wb = wb + 1;
 			end
 		end
-		disp(['Bit error: ', num2str(100*(wb)/length(b)), '%'])
+		disp(['Bit error rate: ', num2str(100*(wb)/length(b)), '%'])
 	else
 		disp('length mismatch')	
 	end
