@@ -21,8 +21,6 @@ function z = qpsk(s, N, N_cp, fcn_type)
 			cp_data = cp_data(end-N_cp+1:end);
 		end
 			
-
-
 		% train_z
 		% cp_train_z = train_z(end-N_cp+1:end);
 

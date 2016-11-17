@@ -6,11 +6,11 @@ clear all, clc, format compact
 %============== SYSTEM CONSTANTS ==============
 %==============================================
 N = 128;			% 128 subcarriers
-N_cp = 60; 			% Cyclic prefix length
-Nt = 128/(2^5);
-ch = 1; 			% Choose between 1, 2
+N_cp = 10; 			% Cyclic prefix length
+Nt = 128/(2^0);
+ch = 2; 			% Choose between 1, 2
 nrPilots = 64;		% Amount of pilots
-sigm = 0.01;		% noise value: 0.01, 0.02, 0.05 (examples)
+sigm = 0.05;		% noise value: 0.01, 0.02, 0.05 (examples)
 diagnotics = 1;
 plots = 0;
 %==============================================
@@ -47,10 +47,9 @@ yt = conv(h,zt)+wt;
 r = ofdm(y, N, N_cp, -1);
 rt = ofdm(yt, Nt, N_cp, -1);
 
-s_hat = equalization(r,rt,st);
-title(['Nt:', num2str(Nt)])
+[s_hat H_Hat] = equalization(r,rt,st);
+% title(['Nt:', num2str(Nt)])
 b_hat = qpsk(s_hat,N, H,-1);
-
 
 
 
@@ -70,8 +69,8 @@ if diagnotics
 	disp(['Number of est. symbols, s_hat: 	', num2str(length(s_hat))])
 	disp(['Number of est. bits, b_hat: 	', num2str(length(b_hat))])
 
-	SNR = (1/length(wn)*sum(abs(wn).^2))/(1/length(y)*sum(abs(y).^2))
-SNRdb = pow2db(SNR)
+	SNR = (1/length(y)*sum(abs(y).^2))/(1/length(wn)*sum(abs(wn).^2));
+SNRdb = 10*log10(SNR)
 
 end
 

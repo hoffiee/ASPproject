@@ -3,9 +3,10 @@ clear all, clc, clf, close all, format compact
 
 % Given constants
 N = 128;
-N_cp = 10; 
+N_cp = 60; 
 ch = 1;
-sigma = 0;
+time_delay = 10;
+sigm = 0.05;
 
 % 1. Generate a bit sequence b(k), length 2N = 2*128.
 b = bits(N);
@@ -22,8 +23,10 @@ z = ofdm(s, N, N_cp);
 % Add cyclic prefix, this is done within ofdm
 y_len = length(z) + length(h) - 1;
 
-y = conv(h,z)+w(sigma,y_len);
-
+y = conv(h,z)+w(sigm,y_len);
+plot(abs(y)), hold on
+y = lag(y,time_delay,sigm);
+plot(abs(y))
 
 r = ofdm(y, N, N_cp, -1);
 
