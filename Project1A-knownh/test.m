@@ -5,7 +5,7 @@ clear all, clc, clf, close all, format compact
 N = 128;
 N_cp = 60; 
 ch = 1;
-time_delay = 10;
+time_delay = 0;
 sigm = 0.05;
 
 % 1. Generate a bit sequence b(k), length 2N = 2*128.
