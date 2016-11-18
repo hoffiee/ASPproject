@@ -5,7 +5,7 @@ function z = qpsk(s, N, N_cp, fcn_type)
 	if nargin < 4 || fcn_type == 1
 		
 
-		data = ifft(s,N);
+		data = ifft(s);
 
 		% Add cyclic prefix
 		
@@ -17,8 +17,9 @@ function z = qpsk(s, N, N_cp, fcn_type)
 
 				cp_data = [cp_data data];
 			end
-
+			
 			cp_data = cp_data(end-N_cp+1:end);
+			length(cp_data)
 		end
 			
 		% train_z
@@ -28,8 +29,8 @@ function z = qpsk(s, N, N_cp, fcn_type)
 
 	else if nargin == 4 && fcn_type == -1
 	
-		s = s(N_cp+1:end-N_cp+1);
-
+		s = s(N_cp+1:N_cp+N);
+		length(s)
 		z = fft(s,N);
 		
 	end

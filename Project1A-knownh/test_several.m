@@ -3,17 +3,24 @@ clear all, clc, clf, close all, format compact
 
 % Given constants
 N = 128;
-N_cp = 70; 
+N_cp = 60; 
 ch = 1;
 time_delay = 0;
-sigm = 0;
+sigm = 0.01;
 
+
+for sigma_case = 1:100
+% sigma_case
+sigm = 0+0.001*(sigma_case-1);
 testcases = 100;
 totalbits = testcases*N;
-biterror = 0;
-snr_avg = 0;
+biterrors = 0;
+snr_avg(sigma_case) = 0;
 
-for i = 1:testcases;
+for i = 1:testcases
+
+
+
 % 1. Generate a bit sequence b(k), length 2N = 2*128.
 b = bits(N);
 
@@ -41,34 +48,27 @@ s_hat = equalization(r,H);
 b_hat = qpsk(s_hat, N, H,-1);
 
 
-
 SNRdb=10*log10(4/(N*sigm)*sum(abs(s).^2));
+% SNRdb = 10*log10(SNR);
 
-snr_avg = snr_avg + SNRdb;
-
-biterror = biterror + sum(b(b~=b_hat));
+snr_avg(sigma_case) = snr_avg(sigma_case) + SNRdb;
+biterrors = biterrors + sum(b ~= b_hat);
 end
 
-% Pb
-BER = biterror / totalbits
-Chann_eff = (N-N_cp) / (N+N_cp)*100
+
+snr_avg(sigma_case) = 1/testcases*snr_avg(sigma_case);
+
+Pb(sigma_case) = (biterrors/totalbits);
 
 
 
 
+end
 
-
-%=====================================
-%=====   Display system plots    =====
-%=====================================
-% figure; stem(b)
-% title('Bitstream')
-
-% figure; plot(s)
-% title('Symbols')
-
-% figure; plot(real(z)), hold on, plot(imag(z))
-% legend('real(z)','imag(z)'), title('OFDM z')
-
-% figure; plot(h), title('Channel h')
-% figure; plot(abs(H)), title('Channel H')
+semilogy(snr_avg/2,Pb)
+title('BER (Pb) vs SNR (db)','Fontsize',15,'Interpreter','latex')
+xlabel('Eb/N0 (dB)','Fontsize',15,'Interpreter','latex')
+% leg = legend('$i_{11}$','$i_{21}$','$i_0$','$v_0$');
+% set(leg,'Fontsize',15,'Interpreter','latex')
+grid on
+print('fig/BERvSNR','-depsc')

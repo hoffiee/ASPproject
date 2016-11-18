@@ -1,11 +1,11 @@
 
-function z = qpsk(s, N, N_cp, fcn_type)
+function [z zt] = qpsk(s, N, N_cp, Nt, fcn_type)
 
 	% Check nr of arguments to determine what to do
 	if nargin < 4 || fcn_type == 1
 		
 
-		data = ifft(s,N);
+		data = ifft(s);
 
 		% Add cyclic prefix
 		
@@ -26,11 +26,17 @@ function z = qpsk(s, N, N_cp, fcn_type)
 
 		z = [cp_data data];
 
-	else if nargin == 4 && fcn_type == -1
-	
-		s = s(N_cp+1:end-N_cp+1);
+		zt = [];
 
-		z = fft(s,N);
+	else if nargin == 5 && fcn_type == -1
+	
+		st = s(N_cp+1:N_cp+Nt);
+		
+		s = s(2*N_cp+Nt+1:N_cp+Nt+N_cp+N);
+
+
+		z = fft(s);
+		zt = fft(st);
 		
 	end
 

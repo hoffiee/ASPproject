@@ -6,16 +6,16 @@ clear all, clc, format compact
 %============== SYSTEM CONSTANTS ==============
 %==============================================
 N = 128;			% 128 subcarriers
-N_cp = 10; 			% Cyclic prefix length
+N_cp = 100; 			% Cyclic prefix length
 ch = 2; 			% Choose between 1, 2
-nrPilots = 32;		% Amount of pilots
-sigm = 0.05;		% noise value: 0.01, 0.02, 0.05 (examples)
+nrPilots = 128/(2^1);		% Amount of pilots
+time_delay = -10;
+sigm = 0;		% noise value: 0.01, 0.02, 0.05 (examples)
 diagnotics = 1;
 plots = 0;
 %==============================================
 %==============================================
 %==============================================
-
 
 % 1. Generate a bit sequence b(k), length 2N = 2*128.
 b = bits(N);
@@ -24,14 +24,13 @@ b_pilots = bits(nrPilots);
 % 2. Encode the bit sequence b(k) into a QPSK sequence s(k)
 s = qpsk(b,N);
 pilots = qpsk(b_pilots,nrPilots);
-
 % Add pilots to datapackage at even indices
 count = 1;
-for i = 1:N/nrPilots:N
+step_size = N/nrPilots;
+for i = step_size/2:step_size:N
 	s(i) = pilots(count);
 	count = count + 1;
 end
-
 
 
 %3. Generate the OFDM sequence z(n) from s(k). Use N = 128 sub-carriers in the OFDM. Select a proper cyclic prefix length Ncp.
@@ -44,17 +43,19 @@ y_len = length(z) + length(h) - 1;
 
 wn = w(sigm,y_len);
 
-
 y = conv(h,z)+wn;
 
 
+y = lag(y,time_delay, sigm);
+plot(abs(y))
 
 r = ofdm(y, N, N_cp, -1);
 
-[s_hat H_Hat] = equalization(r, pilots);
-% title(['Nt:', num2str(Nt)])
-b_hat = qpsk(s_hat,N, H,-1);
 
+[s_hat H_hat] = equalization(r, pilots);
+% figure(1); hold on, plot(abs(H))
+% plot(abs(H_hat))
+b_hat = qpsk(s_hat,N, H,-1);
 
 
 if diagnotics
@@ -62,9 +63,15 @@ if diagnotics
 	disp(['=== Unknown H, channel: ', num2str(ch), '           ==='])
 	disp(['=== Channel: ', num2str(ch), ', Ncp: ', num2str(N_cp), ' Sigma: ', num2str(sigm), '  ==='])
 	disp('=======================================')
-	% SER = sum(s ~= s_hat)/length(s)*100;
-	BER = sum(b ~= b_hat)/length(b)*100;
-	disp(['BER: ', num2str(BER), '%'])
+
+	count=0;
+
+	% BER = count/(N-nrPilots)*100;
+	% BER = sum(b ~= b_hat)/N*100
+	BER = abs( (sum(b ~= b_hat)/N) - (nrPilots)/N)*100
+	disp(['Expected BER: ', ])
+	disp(['carrier eff:', num2str((N-nrPilots)/N*100)])
+	disp(['BER: ', num2str(BER), '%, nr pilots:', num2str(nrPilots)])
 	disp(['Number of bits b: 		', num2str(length(b))])
 	disp(['Number of symbols, s: 		', num2str(length(s))])
 	disp(['number of samples z: 		', num2str(length(z))])
@@ -73,8 +80,8 @@ if diagnotics
 	disp(['Number of est. symbols, s_hat: 	', num2str(length(s_hat))])
 	disp(['Number of est. bits, b_hat: 	', num2str(length(b_hat))])
 
-	SNR = (1/length(y)*sum(abs(y).^2))/(1/length(wn)*sum(abs(wn).^2));
-SNRdb = 10*log10(SNR)
+	SNR=10*log10(4/(N*sigm)*sum(abs(s).^2));
+SNRdb = 20*log10(SNR)
 
 end
 

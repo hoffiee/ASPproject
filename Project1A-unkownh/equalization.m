@@ -1,15 +1,9 @@
 % This function performs the equalisation
-function [s_hat H_hat] = equalization(r,rt,st)
-
-	length(rt)
-	length(st)
+function [s_hat H_hat] = equalization(r,rt,st,N,Nt)
+	
 	H_hat = rt./st;
 
-	% figure;
-	% plot(abs(H_hat))
-
-	h_hat = ifft(H_hat);
-	H_hat = fft(h_hat,128);
+	H_hat = kron(H_hat, ones(1,N/Nt));
 
 	s_hat = conj(H_hat).*r;
 

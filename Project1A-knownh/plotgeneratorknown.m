@@ -51,7 +51,6 @@ disp(['frequency eff: 		', num2str(f_eff),'%'])
 t_eff = N*100/y_len;
 disp(['time Effeciency: 	', num2str(t_eff), '%'])
 
-
 % % plots, added *100 to prevent '.' in the filename which removes the formating when saved
 % figure; plot(s,'o'), title('Symbols s(k)','Fontsize',15,'Interpreter','Latex')
 % xlabel('$Re$','Fontsize',15,'Interpreter','Latex')

@@ -2,32 +2,21 @@
 function [s_hat H_hat] = equalization(r,pilots)
 
 	N = length(r);
-	nrPilots = length(pilots)
-	step_size = N/nrPilots
-	pilots_ind = 1:step_size:N
+	nrPilots = length(pilots);
+	step_size = N/nrPilots;
+	pilots_ind = step_size/2:step_size:N;
 
+	H_hat = r(pilots_ind) ./ pilots;
+	
+	% This fills the estimation to enough samples
+	H_hat = kron(H_hat, ones(1,step_size));
 
-
-	h_est = r(pilots_ind) ./ pilots;
-	plot(abs(h_est))
-	figure;
-	plot(abs(fft(h_est)))
-
-
-
-
-	pil_count = 1;
-	for k = 1:N
-		if k < step_size % This is estimated through the first values
-			s_est(k) = r(k) ./ h_est(1)
-		elseif k > pilots_ind(end) 	% If the index is bigger than the last pilot index, use the last datapoint
-			s_est(k) = r(k) ./ h_est(end)
-		elseif % When index passes pilot index inc pil_count and 
+	for k = 1:length(H_hat)
+		if (mod(k, step_size) == 0) && (k ~= N)
+			H_hat(k) = (H_hat(k)+H_hat(k+1))/2;
+		end
 	end
-
-
-
-
-	s_hat = r;%conj(H_hat).*r;
+	
+	s_hat = r./H_hat;
 
 end
