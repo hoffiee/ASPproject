@@ -5,6 +5,6 @@ function b_hat = equalization(r,H)
 
 	% b_hat = r;
 
-	b_hat = conj(H).*r;
+	b_hat = conj(H).*r./abs(H).^2;
 
 end

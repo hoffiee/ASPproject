@@ -9,8 +9,6 @@ clf, close all
 % sigm = [0 0.01 0.05];
 % sigm = 0.05;
 
-
-
 % =====================
 % === Transmitter	===
 % =====================
@@ -64,11 +62,11 @@ disp(['time Effeciency: 	', num2str(t_eff), '%'])
 % filename = ['fig/r_ch_', num2str(ch),'_td_', num2str(time_delay), '_sigm_', num2str(sigm*100),'_BER_', num2str(int32(BER)) ,];
 % print(filename,'-depsc')
 
-% figure; plot(s_hat,'o'), title('Estimated Symbols s(k)','Fontsize',15,'Interpreter','Latex')
-% xlabel('$Re$','Fontsize',15,'Interpreter','Latex')
-% ylabel('$Im$','Fontsize',15,'Interpreter','Latex')
-% filename = ['fig/shat_ch_', num2str(ch),'_td_', num2str(time_delay), '_sigm_', num2str(sigm*100),'_BER_', num2str(int32(BER)) ,];
-% print(filename,'-depsc')
+figure; plot(s_hat,'o'), title('Estimated Symbols s(k)','Fontsize',15,'Interpreter','Latex')
+xlabel('$Re$','Fontsize',15,'Interpreter','Latex')
+ylabel('$Im$','Fontsize',15,'Interpreter','Latex')
+filename = ['fig/shat_ch_', num2str(ch),'_td_', num2str(time_delay), '_sigm_', num2str(sigm*100),'_BER_', num2str(int32(BER)) ,];
+print(filename,'-depsc')
 
 % Closes all figures
 close all

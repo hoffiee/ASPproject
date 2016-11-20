@@ -5,6 +5,6 @@ function [s_hat H_hat] = equalization(r,rt,st,N,Nt)
 
 	H_hat = kron(H_hat, ones(1,N/Nt));
 
-	s_hat = conj(H_hat).*r;
+	s_hat = conj(H_hat).*r./abs(H_hat).^2;
 
 end

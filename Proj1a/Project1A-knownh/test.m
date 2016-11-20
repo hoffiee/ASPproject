@@ -3,13 +3,13 @@ clear all, clc, clf, close all, format compact
 
 % Given constants
 N = 128;
-N_cp = 70; 
+N_cp = 60; 
 ch = 1;
 time_delay = 0;
-sigm = 0;
+sigm = 0.01;
 
-testcases = 100;
-totalbits = testcases*N;
+testcases = 1;
+totalbits = testcases*2*N;
 biterror = 0;
 snr_avg = 0;
 
@@ -41,22 +41,30 @@ s_hat = equalization(r,H);
 b_hat = qpsk(s_hat, N, H,-1);
 
 
-
 SNRdb=10*log10(4/(N*sigm)*sum(abs(s).^2));
 
 snr_avg = snr_avg + SNRdb;
 
-biterror = biterror + sum(b(b~=b_hat));
+biterror = biterror + sum(b~=b_hat);
+
 end
 
 % Pb
 BER = biterror / totalbits
-Chann_eff = (N-N_cp) / (N+N_cp)*100
+Chann_eff = N / (N+N_cp)*100
+snr_avr = snr_avg / testcases/2
 
 
 
 
-
+% Plot S, S^
+figure;
+plot(s,'x'), hold on
+plot(s_hat,'o')
+legend('symbols s(n)','estimated symbols shat(n)')
+% title('Perfect synch. no noise: Symbols')
+xlabel('$Re$','Fontsize',15,'Interpreter','Latex')
+ylabel('$Im$','Fontsize',15,'Interpreter','Latex')
 
 %=====================================
 %=====   Display system plots    =====

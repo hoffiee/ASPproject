@@ -61,13 +61,12 @@ snr_avg(sigma_case) = 1/testcases*snr_avg(sigma_case);
 Pb(sigma_case) = (biterrors/totalbits);
 
 
-
-
 end
 
 semilogy(snr_avg/2,Pb)
-title('BER (Pb) vs SNR (db)','Fontsize',15,'Interpreter','latex')
+title('BER vs SNR (db)','Fontsize',15,'Interpreter','latex')
 xlabel('Eb/N0 (dB)','Fontsize',15,'Interpreter','latex')
+ylabel('BER','Fontsize',15,'Interpreter','latex')
 % leg = legend('$i_{11}$','$i_{21}$','$i_0$','$v_0$');
 % set(leg,'Fontsize',15,'Interpreter','latex')
 grid on
