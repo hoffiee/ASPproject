@@ -24,7 +24,8 @@ clear all, clf, close all, clc, format compact
 
 
 diagnostics = 	true; 
-plots = 		true;
+plots = 		true;		
+filepath = 		'/fig/' 	% Filepath to figure folder
 
 
 % ==== DEFINE SYSTEM CONSTANTS ====
@@ -120,10 +121,11 @@ if diagnostics
 end
 
 if plots
+	% Plot estimated channel
 	figure; plot(abs(H_hat))
 	title('Estimated channel $|H(\omega)|$','Fontsize',15,'Interpreter','Latex')
 	% Här lägger vi ALLA plots, så vill man inte vänta på plots 
 	% som kan ta tid ibland så har man plots = false;
-	% Plot estimated channel
+	
 	% Plot signal spectrum through different parts of the system
 end
