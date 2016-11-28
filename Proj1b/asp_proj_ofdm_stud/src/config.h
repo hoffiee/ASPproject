@@ -37,7 +37,7 @@
 #define SYSMODE_TEST2				(2)
 #define SYSMODE_TEST3				(3)
 #define SYSMODE_TEST4				(4)
-#define SYSMODE_MONITOR     (5)
+#define SYSMODE_MONITOR     		(5)
 #define SYSMODE_LMS					(6)
 #define SYSMODE_OFDM				(7)
 #define SYSMODE_RADAR				(8)

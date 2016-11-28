@@ -214,13 +214,22 @@ void ofdm_modulate(float * pRe, float * pIm, float* pDst, float f , int length){
 }
 void ofdm_demodulate(float * pSrc, float * pRe, float * pIm,  float f, int length ){
   /*
-   * Demodulate a real signal (pSrc) into a complex signal (pRe and pPim)
+   * Demodulate a real signal (pSrc) into a complex signal (pRe and pIm)
    * with modulation center frequency f and the signal length is length
    */
 	int i;
 	float inc,omega=0;
 
 	/* Add code here */
+
+  inc = 2*M_PI*f;
+
+  for (i=0; i < length; i++){
+    pRe[i] = pSrc[i]*arm_cos_f32(omega);
+    pIm[i] = -pSrc[i]*arm_sin_f32(omega);
+    omega += inc;
+  }
+
 
 }
 
@@ -244,7 +253,12 @@ void cnvt_re_im_2_cmplx( float * pRe, float * pIm, float * pCmplx, int length ){
   */
   int i;
   for ( i = 0; i < length ;i++) {
+    
     /* Add code here */
+    
+    pCmplx[2*i] = pRe[i];
+    pCmplx[2*i+1] = pIm[i];
+
   }
 }
 void concat(float * pSrc1, float * pSrc2, float * pDst, int length){
@@ -282,7 +296,7 @@ void ofdm_conj_equalize(float * prxMes, float * prxPilot,
 *   prxMes[] - complex vector with received data message in frequency domain (FD)
 *   prxPilot[] - complex vector with received pilot in FD
 *   ptxPilot[] - complex vector with transmitted pilot in FD
-*   lenght  - number of complex OFDM symbols
+*   length  - number of complex OFDM symbols
 *  OUT:
 *   pEqualized[] - complex vector with equalized data message (Note: only phase
 *   is equalized)
@@ -290,6 +304,17 @@ void ofdm_conj_equalize(float * prxMes, float * prxPilot,
 */
 	int i;
 	/* Add code here */
+
+  // Make prxPilot_conj -> prxpilot, 64 symbols, 128 values
+  arm_cmplx_conj_f32(prxPilot, prxPilot, length);
+
+  // Multiply prxPilot with ptxPilot
+  arm_cmplx_mult_cmplx_f32(prxPilot, ptxPilot, hhat_conj, length);
+  
+  // Estimate the message with hhat_conj
+  arm_cmplx_mult_cmplx_f32(prxMes,hhat_conj,pEqualized,length);
+
+
 /*   Estimate the conjugate of channel by multiplying the conjugate of prxPilot with
  *   ptxPilot and scale with 0.5
  *   use a combination of the functions
