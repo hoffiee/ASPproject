@@ -19,8 +19,8 @@ function [ yrec ] = simulate_audio_channel( zupmr, sigm )
 %   - Change variable sigma to sigm due to sigma being a built-in
 %   function in matlab
 %%
-
-fs = 22050;
+fs = 16000;
+fs_len = fs;
 f0 = 4000;
 
 if nargin<2 | isempty(sigm),
@@ -41,7 +41,7 @@ end
 maxz=max(abs(zupmr));
 zupmr = zupmr/maxz;  %Limit magnitude to 1.
 
-zero_len= 6*22050-nr;
+zero_len= 6*fs_len-nr;
 if mod(zero_len,2)
     % odd
     z1_len = (zero_len-1)/2;
@@ -71,7 +71,7 @@ y = filter(b_chan,a_chan,zupmr_zp);
 x = resample(y,4,1);
 x = x(ceil(200*rand(1)):end);
 yrec = resample(x,1,4);
-yrec = yrec(1:5*22050)+ sigm*randn(5*22050,1); % Add noise
+yrec = yrec(1:5*fs_len)+ sigm*randn(5*fs_len,1); % Add noise
 
 end
 
