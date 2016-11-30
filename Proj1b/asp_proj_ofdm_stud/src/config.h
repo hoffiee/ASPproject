@@ -51,7 +51,7 @@
  *****************************************************************************/
 
 /** @brief Sets the desired system mode */
-#define SYSMODE 					SYSMODE_OFDM
+#define SYSMODE 					SYSMODE_TEST2
 
 
 /** @brief Global audio sample rate [Hz]

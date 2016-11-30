@@ -340,7 +340,7 @@ void ofdm_conj_equalize(float * prxMes, float * prxPilot,
 
   // Multiply prxPilot with ptxPilot
   arm_cmplx_mult_cmplx_f32(prxPilot, ptxPilot, hhat_conj, length);
-  arm_scale_f32(hhat_conj, 0.5, hhat_conj, length);
+  arm_scale_f32(hhat_conj, 0.5, hhat_conj, 2*length);
 
   // Estimate the message with hhat_conj
   arm_cmplx_mult_cmplx_f32(prxMes,hhat_conj,pEqualized,length);

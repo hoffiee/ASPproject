@@ -18,7 +18,7 @@ function [ yrec ] = simulate_audio_channel( zupmr, sigm )
 % 20161122 Rickard Andersson 
 %   - Change variable sigma to sigm due to sigma being a built-in
 %   function in matlab
-%%
+%
 fs = 16000;
 fs_len = fs;
 f0 = 4000;

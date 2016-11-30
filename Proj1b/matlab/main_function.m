@@ -1,5 +1,5 @@
-function [biterror, sigm, spec_eff] = main_function(SNR, f_s, f_cm, N, N_t, N_cp, R, diagnostics)
-% 
+function [biterror, SNR] = main_function(SNR, f_s, f_cm, N, N_t, N_cp, R, diagnostics)
+
 sigm = 			10^-(SNR/20);
 D = 			R;			% Downsampling rate, same as upsampling	
 bw = 			f_s/R;		% Bandwidth of real valued signal (only real frequencies)
@@ -7,8 +7,6 @@ bw = 			f_s/R;		% Bandwidth of real valued signal (only real frequencies)
 
 %===================================
 %======= 	TRANSMITTER 	========
-%===================================
-
 %===================================
 b = bits(2*N);		% Data
 bt = bits(2*N_t);	% training data
@@ -26,18 +24,18 @@ z_u = zeros(1,R*length(z));	% Make vector with zeros
 z_u(1:R:end) = z;	% Add values from z(n)
 
 % Interpolation filter
-B = firpm(255,[0 1/R 1.1/R 1],[1 1 0 0]);
+B = firpm(63,[0 1/R 1.6/R 1],[1 1 0 0]);
 z_i = conv(z_u,B);
 
 % z_i(n) 	-> Modulation 	-> z_imr(n)
 n = (0:length(z_i)-1);
-z_imr = z_i.*exp(1i*2*pi*f_cm/f_s*n);
-z_mr = real(z_imr);
-y_len = length(z_mr);
+z_im = z_i.*exp(1i*2*pi*f_cm/f_s*n);
+z_imr = real(z_im);
+y_len = length(z_imr);
 %===================================
 %======= 	  CHANNEL 	 	========
 %===================================
-y_rec = simulate_audio_channel(z_mr,sigm)'; % Turn into row vector to fit our code
+y_rec = simulate_audio_channel(z_imr,sigm)'; % Turn into row vector to fit our code
 
 %===================================
 %======= 	 RECEIVER 		========
@@ -53,7 +51,8 @@ while true
 	end
 	ind = ind + 1;
 end
-y_synch = y_rec(ind+N_cp:ind+N_cp+y_len-1);
+% y_synch = y_rec(ind+N_cp:ind+N_cp+y_len-1);
+y_synch = y_rec(ind:ind+y_len-1);
 
 % y_rec(n) 	-> Demodulation -> y_ib(n)
 y_ib = y_synch.*exp(-1i*2*pi*f_cm/f_s*n);
@@ -78,9 +77,15 @@ b_hat = qpsk(s_hat, -1);
 
 biterror = sum(b~=b_hat);
 
+% signal_power = sum(abs(z_imr).^2);
+% SNR = 20*log10(signal_power/sigm);
+% SNR = 20*log20(1/sigm);
+
+
 if diagnostics 
 	% System information
 	BER = sum(b~=b_hat)/(2*N);
+	
 	disp(['BER: 			', num2str(BER*1e3),'e-3'])
 	disp(['SNR: 	', num2str(SNR), ' sigma: 	', num2str(sigm)])
 	% Signal power
