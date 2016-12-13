@@ -9,7 +9,7 @@
 
 #define TEST 			(0)
 #define NORMAL 		(1)
-#define TESTMODE TEST
+#define TESTMODE NORMAL
 
 #if SYSMODE == SYSMODE_LMS
 
@@ -74,7 +74,7 @@ void lab_lms_init(void){
 			blocks_sources_test_y(y_data);
 			blocks_sources_test_x(x_data);
 			my_lms(y_data, x_data, xhat_data, e_data, AUDIO_BLOCKSIZE);
-//		  arm_lms_f32(&lms_s, y_data, x_data, xhat_data, e_data, AUDIO_BLOCKSIZE);
+		  // arm_lms_f32(&lms_s, y_data, x_data, xhat_data, e_data, AUDIO_BLOCKSIZE);
 		}
 		printf("Correct values are \n"
 		 "h=[0, 1, -1, 2, -4, 6, -8, 10]\n"
@@ -182,12 +182,7 @@ void lab_lms(void){
   };
 }
 
-void my_lms(
-	    float * y,
-	    float * x,
-	    float * xhat,
-	    float * e,
-	    int blockSize){
+void my_lms(float * y, float * x, float * xhat, float * e, int blockSize){
 	/*
 	y[] = vector of input signal of length blockSize
 	x[] = vector of "desired" signal of length blockSize
@@ -206,7 +201,26 @@ void my_lms(
   // pState has length blockSize+numTaps-1
   arm_copy_f32(y, &(lms_state[LAB_LMS_TAPS-1]), blockSize);
 
+  // printf("%i\n", LAB_LMS_TAPS);
+
   /* Place your code here */
+  for (i = 0; i < blockSize; i++){
+
+    // Estimate xhat with lms_state from index i, (Filter output)
+    arm_dot_prod_f32(lms_coeffs, lms_state+i, LAB_LMS_TAPS, &xhat[i]);
+
+    e[i] = x[i] - xhat[i]; // Output Error
+
+    // float g = 2*lms_mu * e[i];
+
+    for (fi = 0; fi < LAB_LMS_TAPS; fi++){
+      // Update Filter coefficients
+      // lms_coeffs[fi+1] = lms_coeffs[fi] + g*lms_state[LAB_LMS_TAPS+i-1-fi];
+      lms_coeffs[fi] += 2*lms_mu*e[i]*lms_state[fi+i]; // Detta blev ju inte direkt fantastiskt
+    }
+  }
+
+
 
   // Place last numTaps-1 inpuy (y) samples first in state vector lms_state
   arm_copy_f32( &y[blockSize - (LAB_LMS_TAPS-1)], lms_state, LAB_LMS_TAPS-1);
